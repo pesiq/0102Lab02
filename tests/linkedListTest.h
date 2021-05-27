@@ -1,0 +1,8 @@
+//
+// Created by pesel on 28.05.2021.
+//
+
+#ifndef LAB02_LINKEDLISTTEST_H
+#define LAB02_LINKEDLISTTEST_H
+
+#endif //LAB02_LINKEDLISTTEST_H
