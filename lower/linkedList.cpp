@@ -14,6 +14,9 @@ void linkedList<T>::append(T val) {
     if(first == nullptr){
         first = temp;
     }
+    if(last != nullptr){
+        last->next = temp;
+    }
     last = temp;
 }
 
@@ -23,18 +26,48 @@ void linkedList<T>::prepend(T val) {
     auto *temp = new struct item;
     temp->value = val;
     temp->previous = nullptr;
-    temp->previous = first;
+    temp->next = first;
     if(last == nullptr){
         last = temp;
     }
+    if(first != nullptr){
+        first->previous = temp;
+    }
     first = temp;
+}
+
+template<class T>
+void linkedList<T>::set(T val, int index){
+    if(abs(index) > size){
+        throw indexOutOfRange();
+    }
+
+    if(size == 0){
+        first->value = val;
+        return;
+    }
+    if(index > 0){
+        struct item *ptr = first;
+        while(index){
+            ptr = ptr->next;
+            index--;
+        }
+        ptr->value = val;
+    } else {
+        struct item *ptr = first;
+        while (index){
+            ptr = ptr->previous;
+            index++;
+        }
+        ptr->value = val;
+    }
 }
 
 template<class T>
 void linkedList<T>::insertAt(T val, int index) {
 
     if(abs(index) > size){
-        //TODO throw index out of range
+        throw indexOutOfRange();
     }
 
     if(index == 0){
@@ -82,10 +115,10 @@ void linkedList<T>::insertAt(T val, int index) {
 }
 
 template<class T>
-linkedList<T> &linkedList<T>::getSublist(size_t start, size_t end) {
+linkedList<T> linkedList<T>::getSublist(size_t start, size_t end) {
     size_t resultSize = end - start + 1;
-    T array[] = new T[resultSize];
-    struct item *ptr = start;
+    T *array = new T[resultSize];
+    struct item *ptr = first;
     for (int i = 0; i < start; i++){
         ptr = ptr->next;
     }
@@ -99,7 +132,7 @@ linkedList<T> &linkedList<T>::getSublist(size_t start, size_t end) {
 template<class T>
 T linkedList<T>::get(int index) {
     if(index > size || index < 0){
-        //TODO throw index out of range
+        throw indexOutOfRange();
     }
     T temp;
     struct item *ptr = first;
@@ -112,7 +145,7 @@ T linkedList<T>::get(int index) {
 template<class T>
 T linkedList<T>::getFirst() {
     if(first == nullptr) {
-        //TODO throw index out of range
+        throw indexOutOfRange();
     }
     return first->value;
 }
@@ -120,13 +153,13 @@ T linkedList<T>::getFirst() {
 template<class T>
 T linkedList<T>::getLast() {
     if(last == nullptr) {
-        //TODO throw index out of range
+        throw indexOutOfRange();
     }
     return last->value;
 }
 
 template<class T>
-size_t linkedList<T>::length() {
+int linkedList<T>::length(){
     return size;
 }
 
@@ -137,6 +170,71 @@ void linkedList<T>::concatenate(linkedList<T> list) {
         append(ptr->value);
         ptr->next;
     }
+}
+
+
+template<class T>
+linkedList<T>::~linkedList(){
+    if(size != 0)
+        deleteList();
+    first == nullptr;
+    last == nullptr;
+    size = 0;
+}
+
+template<class T>
+void linkedList<T>::deleteList() {
+    if(first != nullptr) {
+        struct item *curr = first;
+        struct item *next = curr->next;
+        while (curr != nullptr){
+            delete curr;
+            curr = next;
+            if(curr)
+                next = curr->next;
+
+        }
+        size = 0;
+    }
+}
+
+
+template<class T>
+void linkedList<T>::deleteItem(int index) {
+    if(abs(index) > size){
+        throw indexOutOfRange();
+    }
+    if(index == 0){
+        first->next->previous = nullptr;
+        auto *temp = first->next;
+        delete first;
+        first = temp;
+    }
+    if(index == size-1){
+        last->previous->next = nullptr;
+        auto *temp = last->previous;
+        delete last;
+        last = temp;
+    }else if(index > 0){
+        struct item *ptr = first;
+        while(index){
+            ptr = ptr->next;
+            index--;
+        }
+        ptr->previous->next = ptr->next;
+        ptr->next->previous = ptr->previous;
+        delete ptr;
+    } else {
+        struct item *ptr = first;
+        while (index){
+            ptr = ptr->previous;
+            index++;
+        }
+        ptr->previous->next = ptr->next;
+        ptr->next->previous = ptr->previous;
+        delete ptr;
+    }
+    size--;
 }
 
 template<class T>

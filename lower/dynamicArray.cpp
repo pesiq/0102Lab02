@@ -14,11 +14,11 @@ dynamicArray<T>::dynamicArray(T *arr, size_t amount) {
 template<class T>
 dynamicArray<T>::dynamicArray(size_t amount) {
     if(amount <= 0) {
-        //TODO throw invalid argument
+        throw invalidArgument();
     }
+    size = amount;
     bufferSize = 2*amount;
     items = new T[bufferSize]; //allocating memory for dynamicArray
-    size = amount;
 }
 
 template<class T>
@@ -31,26 +31,58 @@ dynamicArray<T>::dynamicArray(const dynamicArray<T> &array) {
     }
 }
 
+template<class T>
+dynamicArray<T>::dynamicArray() {
+    size = 0;
+    bufferSize = 10;
+    items = new T[bufferSize];
+}
+
 //destructors
 template<class T>
 dynamicArray<T>::~dynamicArray() {
-    delete[] items;
-    delete this;
+    if(bufferSize > 0)
+        delete[] items;
+    bufferSize = 0;
+    size = 0;
 }
 
 template<class T>
-void dynamicArray<T>::deleteArray() {
-    delete[] items;
-    delete this;
+void dynamicArray<T>::deleteArray(){
+    if(bufferSize > 0)
+        delete[] items;
+    bufferSize = 0;
+    size = 0;
 }
 
 //decomposition
 template <class T>
 T dynamicArray<T>::get(int index) {
     if(index > size || index < 0){
-        //TODO throw index out of range
+        throw indexOutOfRange();
     }
     return items[index];
+}
+
+template<class T>
+void dynamicArray<T>::append(T value){
+    size++;
+    if (size > bufferSize){
+        resize(bufferSize*2);
+    }
+    set(size-1, value);
+}
+
+template<class T>
+void dynamicArray<T>::prepend(T value){
+    size++;
+    if (size > bufferSize){
+        resize(bufferSize*2);
+    }
+    for(int i = size-2; i > 0; i--) {
+        items[i+1] = items[i];
+    }
+    set(0, value);
 }
 
 template<class T>
@@ -62,7 +94,7 @@ size_t dynamicArray<T>::length() {
 template<class T>
 void dynamicArray<T>::set(int index, T value) {
     if(index > size || index < 0){
-        //TODO throw index out of range
+        throw indexOutOfRange();
     }
     items[index] = value;
 }
@@ -90,7 +122,7 @@ void dynamicArray<T>::resize(int amount) {
 
     if(amount < 0){
         if(size-amount > 0){
-            size -= amount;
+            size += amount;
         } else {
             size = 0;
         }

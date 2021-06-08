@@ -6,9 +6,22 @@
 #define LAB02_EXCEPTIONS_H
 
 #include <exception>
+#include <cstdlib>
+#include <string>
 
-class exceptions : public std::exception {
+class indexOutOfRange : public std::exception {
+public:
+const char * what() const noexcept override{
+    return "Invalid index!";
+}
 
+};
+
+class invalidArgument : public std::exception {
+public:
+const char * what() const noexcept override{
+    return "Bad argument!";
+}
 };
 
 #endif //LAB02_EXCEPTIONS_H
