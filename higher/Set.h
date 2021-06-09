@@ -10,8 +10,10 @@ private:
 public:
     Set() = default;
 
-    Set(listSequence<T>& s1){
-        set = s1.getSubsequence(0, s1.length()-1);
+    explicit Set(listSequence<T>& s1){
+        for(int i = 0; i < s1.length(); i++){
+            this->add(s1[i]);
+        }
     }
 
     int size(){
@@ -25,7 +27,8 @@ public:
             return;
         }
 
-        for(int i = 0; i < set.length(); i++){
+        int i;
+        for(i = 0; i < set.length(); i++){
             if(set[i] > value){
                 set.insertAt(value, i);
                 return;
@@ -69,7 +72,7 @@ public:
     }
 
     Set<T>& difference(Set<T>& s1){
-        auto *result = Set<T>(set);
+        auto *result = new Set<T>(s1.set);
         int index1 = 0;
         int index2 = 0;
         while(index1 < size() && index2 < s1.size()){
@@ -77,7 +80,7 @@ public:
             T element2 = s1.set[index2];
 
             if(set[index1] == s1.set[index2]){
-                result.remove(set[index2]);
+                result->remove(set[index2]);
                 index1++;
                 index2++;
             }
@@ -88,7 +91,14 @@ public:
             }
         }
         return *result;
+    }
 
+    void unionize(Set<T>& s2){
+        Set<T> tmp = difference(s2);
+
+        for(int i = 0; i < tmp.size(); i++){
+            this->add(tmp.set[i]);
+        }
     }
 
     bool includeSubset(Set<T>& s1){
@@ -118,8 +128,13 @@ public:
     }
 
     friend std::ostream &operator<<(std::ostream &temp, Set<T>& s1){
-        temp <<'[' << s1 << ']';
+        temp <<'[' << s1.set << ']';
         return temp;
+    }
+
+    Set<T> &operator=(Set<T> s1){
+        set = s1.set.getSubsequence(0, s1.set.length()-1);
+        return *this;
     }
 };
 

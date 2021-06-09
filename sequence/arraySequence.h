@@ -23,8 +23,8 @@ public:
         array = dynamicArray<T> (amount);
     }
 
-    arraySequence(arraySequence<T> const &arr){
-        array = dynamicArray<T> (arr);
+    arraySequence(dynamicArray<T> const &arr){
+        array = arr;
     }
 
     ~arraySequence(){

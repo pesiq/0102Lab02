@@ -49,7 +49,7 @@ public:
     }
 
     void insertAt(T val, int index){
-        list.insertAt(index,val);
+        list.insertAt(val, index);
     }
 
     T get(int index){
@@ -65,26 +65,40 @@ public:
     }
 
     void deleteItem(int index){
-
+        list.deleteItem(index);
     }
 
     void set(T val, int index){
 
     }
 
-    sequence<T>* getSubsequence(int start, int end){
-        auto newlist = list.getSublist(start, end);
+    listSequence<T>& getSubsequence(int start, int end){
+        listSequence<T> newlist = list.getSublist(start, end);
         listSequence<T> *newseq = new listSequence<T>();
         for(int i = 0; i < newseq->length(); i++){
             newseq->append(newlist.get(i));
         }
-        return newseq;
+        return *newseq;
     }
 
     void concatenate(sequence<T> *li){
         for(int i = 0; i<li->length(); i++){
             this->append(li->get(i));
         }
+    }
+
+    T &operator[](int i){
+        return list.get(i);
+    }
+
+    listSequence<T> &operator= (listSequence<T> &list1){
+        list = list1.list;
+        return *this;
+    }
+
+    friend std::ostream &operator<<(std::ostream &temp, listSequence<T>& s1){
+        temp << s1.list;
+        return temp;
     }
 
 };

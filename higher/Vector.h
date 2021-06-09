@@ -15,6 +15,10 @@ public:
         coordinates = arraySequence<T>(coords, dim);
     }
 
+    explicit Vector(int size){
+        coordinates = arraySequence<T>(size);
+    }
+
     explicit Vector(arraySequence<T> &vec){
         coordinates = vec;
     }
@@ -74,15 +78,15 @@ public:
         return this->subVectors(v1);
     }
 
-    T operator*(const Vector<T> v1){
+    T operator*(Vector<T>& v1){
 
         T accumulator;
-        if(v1.dim() != dim()){
+        if(v1.dim() != this->dim()){
             throw invalidArgument();
         }
 
         for (int i = 0; i < v1.dim(); i++) {
-            accumulator = this[i] * v1[i];
+            accumulator = (*this)[i] * v1[i];
         }
         return accumulator;
     }
@@ -90,22 +94,23 @@ public:
     Vector<T>& operator*(const int val){
         auto *res = new Vector<T>;
         for (int i = 0; i < this->dim(); i++) {
-            res[i] = this[i] * val;
+            res->coordinates.append((*this)[i] * val);
         }
         return *res;
     }
+
 
     friend std::ostream &operator<<(std::ostream& temp, Vector<T>& vec){
         temp << '{';
         for (int i = 0; i < vec.dim(); i++) {
             temp << vec[i];
-            if(i == vec.dim()){
+            if(i == vec.dim()-1){
                 temp << '}';
                 break;
             }
             temp << ", ";
         }
-        return
+        return temp;
     }
 };
 

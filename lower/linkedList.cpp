@@ -92,7 +92,7 @@ void linkedList<T>::insertAt(T val, int index) {
         return;
     }
     if(index > 0){
-        while(index){
+        while(index>0){
             ptr = ptr->next;
             index--;
         }
@@ -102,7 +102,7 @@ void linkedList<T>::insertAt(T val, int index) {
         newItem->next = ptr;
 
     } else {
-        while (index){
+        while (index<0){
             ptr = ptr->previous;
             index++;
         }
@@ -115,7 +115,7 @@ void linkedList<T>::insertAt(T val, int index) {
 }
 
 template<class T>
-linkedList<T> linkedList<T>::getSublist(size_t start, size_t end) {
+linkedList<T>& linkedList<T>::getSublist(size_t start, size_t end) {
     size_t resultSize = end - start + 1;
     T *array = new T[resultSize];
     struct item *ptr = first;
@@ -126,11 +126,12 @@ linkedList<T> linkedList<T>::getSublist(size_t start, size_t end) {
         array[i] = ptr->value;
         ptr = ptr->next;
     }
-    return linkedList<T>(array, resultSize);
+    auto *res = new linkedList<T>(array, resultSize);
+    return *res;
 }
 
 template<class T>
-T linkedList<T>::get(int index) {
+T &linkedList<T>::get(int index) {
     if(index > size || index < 0){
         throw indexOutOfRange();
     }

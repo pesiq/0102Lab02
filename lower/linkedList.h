@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include "../exceptions/exceptions.h"
+#include <ostream>
 template <class T>
 class linkedList{
 private:
@@ -28,8 +29,8 @@ public:
     //decomposition
     T getFirst(); //get first element
     T getLast(); //get last element
-    T get(int index); //get element at index
-    linkedList<T> getSublist(size_t start, size_t end); //create linkedList of elements with index start to the element with index end
+    T &get(int index); //get element at index
+    linkedList<T>& getSublist(size_t start, size_t end); //create linkedList of elements with index start to the element with index end
     int length(); //get size of linkedList
 
     //operations
@@ -51,7 +52,10 @@ public:
     friend std::ostream &operator<< (std::ostream &temp, linkedList<T> &l1){
         struct item *ptr = l1.first;
         for (int i = 0; i < l1.size; i++) {
-            temp<<ptr->value<<" ";
+            temp<<ptr->value;
+            if(i != l1.size-1) {
+                temp << " ";
+            }
             ptr = ptr->next;
         }
         return temp;
